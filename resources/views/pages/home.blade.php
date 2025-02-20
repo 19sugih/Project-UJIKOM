@@ -1,69 +1,166 @@
 @extends('layouts.app')
 
 @section('content')
-    <div id="content" class="overflow-hidden bg-dark text-white" style="min-height: 100vh; padding: 20px;">
-        @if ($lists->isEmpty())
-            <div class="d-flex flex-column align-items-center justify-content-center" style="height: 80vh;">
-                <p class="fw-bold text-center fs-4">Belum ada tugas yang ditambahkan</p>
-                <button type="button" class="btn btn-lg btn-outline-info d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addListModal">
-                    <i class="bi bi-plus-square fs-3"></i> Tambah List
+    <!-- Container utama untuk seluruh konten -->
+    <!-- overflow-x-auto: Scroll horizontal hanya muncul jika kontennya lebih lebar dari layar -->
+    <div id="content" class="overflow-x-auto whitespace-nowrap">
+
+        <!-- Jika belum ada tugas, tampilkan pesan dan tombol tambah tugas -->
+        @if ($lists->count() == 0)
+            <div class="d-flex flex-column justify-content-center align-items-center text-center"
+                style="height: 80vh; width: 100%;">
+                <!-- Pesan pemberitahuan bahwa belum ada tugas -->
+                <p class="text-dark fst-italic">Belum ada tugas yang ditambahkan</p>
+                <!-- Tombol untuk menambah tugas baru -->
+                <!-- data-bs-toggle="modal": Membuka modal ketika tombol diklik -->
+                <!-- data-bs-target="#addListModal": Menargetkan modal dengan ID "addListModal" -->
+                <button type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2"
+                    data-bs-toggle="modal" data-bs-target="#addListModal">
+                    <i class="bi bi-plus-square fs-4"></i>
                 </button>
             </div>
         @endif
 
-        <div class="d-flex gap-4 px-4 flex-nowrap overflow-auto" style="height: 80vh;">
+        @if ($lists->count() !== 0)
+            <!-- Row untuk tombol "Tambah Task" dan form pencarian -->
+            <!-- align-items-center: Menyamakan tinggi antara tombol dan form pencarian -->
+            <div class="row my-1 align-items-center">
+
+                <!-- Kolom untuk form pencarian -->
+                <!-- col-3: Lebar kolom 3 dari total 12 grid bootstrap -->
+                <div class="col-3 ms-auto"> <!-- ms-auto mendorong kolom ke kanan -->
+                    <form action="{{ route('home') }}" method="GET" class="d-flex gap-2">
+                        <!-- Input untuk mengetik kata kunci pencarian -->
+                        <input type="text" class="form-control" name="query" placeholder="Cari tugas atau list..."
+                            value="{{ request()->query('query') }}">
+
+                        <!-- Tombol submit untuk menjalankan pencarian -->
+                        <button type="submit" class="btn btn-warning gap-5">Cari</button>
+                    </form>
+                </div>
+            </div>
+        @endif
+        <!-- Kolom untuk tombol "Tambah Task" -->
+        <!-- col-3: Lebar kolom 3 dari total 12 grid bootstrap -->
+        <div class="col-3">
+            @if ($lists->count() !== 0)
+                <button type="button"
+                    class="btn btn-primary mb-3 mx-3 w-100 d-flex align-items-center justify-content-center"
+                    data-bs-toggle="modal" data-bs-target="#addListModal">
+                    <i class="bi bi-plus fs-6 me-2"></i> Tambah Task
+                </button>
+            @endif
+        </div>
+
+        <!-- Container untuk daftar tugas -->
+        <!-- flex-nowrap: Supaya semua kartu list tetap dalam satu baris -->
+        <!-- overflow-x-auto: Scroll horizontal muncul jika jumlah list melebihi layar -->
+        <div class="d-flex gap-3 px-3 flex-wrap overflow-x-auto" style="height: 100vh;">
             @foreach ($lists as $list)
-                <div class="card bg-secondary text-dark flex-shrink-0 shadow-lg" style="width: 20rem; max-height: 85vh; border-radius: 15px;">
-                    <div class="card-header bg-primary text-white d-flex align-items-center justify-content-between">
-                        <h4 class="card-title text-center w-100 m-0">{{ $list->name }}</h4>
-                        <form action="{{ route('lists.destroy', $list->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm p-0 text-white">
-                                <i class="bi bi-trash fs-4"></i>
+                <div class="card text-white flex-shrink-0 bg-info-subtle border border-waring d-flex flex-column"
+                    style="width: 18rem; max-height: 70vh;">
+
+                    <!-- Header Card -->
+                    <div class="card-header bg-primary d-flex align-items-center justify-content-between border-0">
+                        <h4 class="card-title text-truncate">{{ $list->name }}</h4>
+                        <!-- Menampilkan nama list dengan teks yang terpotong jika terlalu panjang -->
+
+                        <!-- Bagian tombol untuk edit dan hapus list -->
+                        <div class="d-flex align-items-center gap-2 mx-2">
+                            <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                data-bs-target="#editListModal"> <!-- Tombol untuk membuka modal edit list -->
+                                <i class="bi bi-pencil-square"></i> <!-- Ikon Edit -->
                             </button>
-                        </form>
+
+                            <!-- Form untuk menghapus list -->
+                            <form action="{{ route('lists.destroy', $list->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn btn-danger">
+                                    <i class="bi bi-trash text-light"></i> <!-- Ikon Hapus -->
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="card-body d-flex flex-column gap-3 overflow-auto text-center" style="max-height: 65vh;">
+
+                    <!-- Body Card -->
+                    <div class="card-body d-flex flex-column gap-2 overflow-x-hidden style="min-height: 600px;">
                         @foreach ($list->tasks as $task)
-                            <div class="card bg-light text-dark shadow-sm" style="border-radius: 10px;">
-                                <div class="card-header bg-secondary text-white d-flex justify-content-between">
-                                    <p class="fw-bold lh-1 m-0 {{ $task->is_completed ? 'text-decoration-line-through' : '' }}">
-                                        {{ $task->name }}
-                                    </p>
-                                    <span class="badge bg-{{ $task->priorityClass }} text-white">{{ $task->priority }}</span>
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-text">{{ $task->description }}</p>
-                                </div>
-                                @if (!$task->is_completed)
-                                    <div class="card-footer text-center">
-                                        <form action="{{ route('tasks.complete', $task->id) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="btn btn-success w-100 rounded-pill">
-                                                <i class="bi bi-check-circle fs-5"></i> Selesai
-                                            </button>
-                                        </form>
+                            @if ($task->list_id == $list->id)
+                                <!-- Card untuk setiap tugas -->
+                                <div class="card bg-white border border-dark style="min-height: 120px; opacity: 0;">
+                                    <div class="card-header border-2">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div
+                                                class="d-flex flex-column justify-content-center gap-2 w-100 overflow-hidden">
+
+                                                <!-- Nama tugas, jika selesai maka akan dicoret -->
+                                                <a href="{{ route('tasks.show', $task->id) }}"
+                                                    class="fw-bold lh-1 m-0 {{ $task->is_completed ? 'text-decoration-line-through' : '' }} text-truncate">
+                                                    {{ $task->name }}
+                                                </a>
+
+                                                <!-- Badge untuk menampilkan prioritas tugas -->
+                                                <span class="badge text-bg-{{ $task->priorityClass }} badge-pill"
+                                                    style="width: fit-content">
+                                                    {{ $task->priority }}
+                                                </span>
+                                            </div>
+
+                                            <!-- Form untuk menghapus tugas -->
+                                            <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
+                                                style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm p-0">
+                                                    <i class="bi bi-x-circle text-danger fs-5"></i> <!-- Ikon Hapus -->
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
-                                @endif
-                            </div>
+
+                                    <!-- Deskripsi tugas -->
+                                    <div class="card-body">
+                                        <p class="card-text text-wrap">{{ $task->description }}</p>
+                                    </div>
+
+                                    <!-- Jika tugas belum selesai, tampilkan tombol "Selesai" -->
+                                    @if (!$task->is_completed)
+                                        <div class="card-footer border-2">
+                                            <form action="{{ route('tasks.complete', $task->id) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <button type="submit" class="btn btn-sm btn-success w-100">
+                                                    <span class="d-flex align-items-center justify-content-center">
+                                                        <i class="bi bi-check fs-5"></i> <!-- Ikon Check -->
+                                                        Selesai
+                                                    </span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
                         @endforeach
-                        <button type="button" class="btn btn-outline-dark rounded-pill" data-bs-toggle="modal" data-bs-target="#addTaskModal" data-list="{{ $list->id }}">
-                            <i class="bi bi-plus fs-4"></i> Tambah Tugas
+
+
+                        <!-- Tombol untuk menambahkan tugas baru -->
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#addTaskModal" data-list="{{ $list->id }}">
+                            <span class="d-flex align-items-center justify-content-center">
+                                <i class="bi bi-plus fs-5"></i><!-- Ikon Tambah -->
+                                Tambah
+                            </span>
                         </button>
                     </div>
-                    <div class="card-footer text-center bg-dark text-white">
-                        <p class="card-text m-0">{{ $list->tasks->count() }} Tugas</p>
+
+                    <!-- Footer Card -->
+                    <div class="card-footer bg-primary d-flex justify-content-center align-items-center border-0">
+                        <p class="card-text">{{ $list->tasks->count() }} Tugas</p>
+                        <!-- Menampilkan jumlah tugas dalam list -->
                     </div>
                 </div>
             @endforeach
-
-            @if ($lists->isNotEmpty())
-                <button type="button" class="btn btn-outline-info flex-shrink-0 rounded-pill shadow-lg" style="width: 20rem; height: fit-content;" data-bs-toggle="modal" data-bs-target="#addListModal">
-                    <i class="bi bi-plus fs-3"></i> Tambah List
-                </button>
-            @endif
         </div>
     </div>
 @endsection
