@@ -8,6 +8,7 @@ use App\Models\TaskList;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+//class TaskSeeder extends Seeder digunakan untuk mengisi tabel tasks dengan data awal atau dummy secara otomatis.
 class TaskSeeder extends Seeder
 {
     /**
@@ -15,6 +16,8 @@ class TaskSeeder extends Seeder
      * 
      * Fungsi ini digunakan untuk mengisi tabel 'tasks' dengan data awal.
      */
+
+     //public function run(): void biasanya digunakan dalam seeder Laravel untuk memasukkan data ke dalam database secara otomatis
     public function run(): void
     {
         // Mendefinisikan array yang berisi data tugas

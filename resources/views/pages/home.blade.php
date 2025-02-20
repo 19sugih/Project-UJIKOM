@@ -43,7 +43,8 @@
         <!-- Kolom untuk tombol "Tambah Task" -->
         <!-- col-3: Lebar kolom 3 dari total 12 grid bootstrap -->
         <div class="col-3">
-            @if ($lists->count() !== 0)
+            <!-- digunakan untuk mengecek apakah koleksi $lists memiliki data. Jika jumlahnya tidak nol, maka blok kode di dalamnya akan dijalankan. -->
+            @if ($lists->count() !== 0) <!--Mencegah tampilan kosong atau error saat data tidak tersedia-->
                 <button type="button"
                     class="btn btn-primary mb-3 mx-3 w-100 d-flex align-items-center justify-content-center"
                     data-bs-toggle="modal" data-bs-target="#addListModal">
@@ -84,11 +85,11 @@
                     </div>
 
                     <!-- Body Card -->
-                    <div class="card-body d-flex flex-column gap-2 overflow-x-hidden style="min-height: 600px;">
+                    <div class="card-body d-flex flex-column gap-2 overflow-x-hidden style="min-height: 600px;>
                         @foreach ($list->tasks as $task)
                             @if ($task->list_id == $list->id)
                                 <!-- Card untuk setiap tugas -->
-                                <div class="card bg-white border border-dark style="min-height: 120px; opacity: 0;">
+                                <div class="card bg-white border border-dark style="min-height: 120px; opacity: 0;>
                                     <div class="card-header border-2">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <div

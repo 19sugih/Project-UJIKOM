@@ -6,11 +6,12 @@ use App\Models\Task;
 use App\Models\TaskList;
 use Illuminate\Http\Request;
 
+//class TaskController extends Controller adalah controller dalam Laravel yang digunakan untuk mengelola logika CRUD (Create, Read, Update, Delete) terkait tasks.
 class TaskController extends Controller
 {
     // Menampilkan daftar tugas dan daftar task list berdasarkan pencarian (jika ada)
     public function index(Request $request)
-    {   
+    {
         // Mengambil query pencarian dari request (jika ada)
         $query = $request->input('query');
 
@@ -20,7 +21,7 @@ class TaskController extends Controller
                 ->orWhere('description', 'like', "%{$query}%") // Mencari berdasarkan deskripsi tugas
                 ->latest() // Mengurutkan berdasarkan waktu terbaru
                 ->get(); // Mengambil data tugas dari database
-            
+
             // Mencari daftar tugas (task list) yang mengandung kata kunci atau memiliki tugas yang mengandung kata kunci
             $lists = TaskList::where(function ($queryBuilder) use ($query) {
                 $queryBuilder->where('name', 'like', "%{$query}%") // Mencari daftar tugas berdasarkan nama
@@ -37,7 +38,7 @@ class TaskController extends Controller
         }
 
         // Menyiapkan data yang akan dikirimkan ke tampilan
-        $data = [ 
+        $data = [
             'title' => 'Home', // Judul halaman
             'lists' => $lists, // Data daftar tugas
             'tasks' => $tasks, // Data tugas
@@ -112,7 +113,7 @@ class TaskController extends Controller
             'list_id' => $request->list_id // Memperbarui list_id tugas 
         ]);
 
-        return redirect()->back()->with('success', 'List berhasil diperbarui!');
+        return redirect()->back()->with('success', 'List berhasil diperbarui!'); //mengembalikan pengguna ke halaman sebelumnya dengan pesan sukses yang disimpan dalam session flash || Session flash adalah data sementara yang hanya tersedia selama satu request saja. Biasanya digunakan untuk menampilkan pesan notifikasi setelah aksi tertentu, seperti sukses atau error
     }
 
     // Memperbarui tugas yang ada di database
@@ -125,26 +126,26 @@ class TaskController extends Controller
             'priority' => 'required|in:low,medium,high' // Prioritas harus valid
         ]);
 
-        Task::findOrFail($task->id)->update([
+        $task = Task::findOrFail($task->id)->update([
             'list_id' => $request->list_id,
             'name' => $request->name,
             'description' => $request->description,
             'priority' => $request->priority
         ]);
 
-        return redirect()->back()->with('success', 'Task berhasil diperbarui!');
+        return redirect()->back()->with('success', 'Task berhasil diperbarui!'); //mengembalikan pengguna ke halaman sebelumnya dengan pesan sukses yang disimpan dalam session flash || Session flash adalah data sementara yang hanya tersedia selama satu request saja. Biasanya digunakan untuk menampilkan pesan notifikasi setelah aksi tertentu, seperti sukses atau error
     }
 
-    
 
+
+    //public function profil() adalah fungsi dalam controller yang digunakan untuk menangani logika tampilan atau pengolahan data profil pengguna
     public function profil()
     {
         $data = [
             'title' => 'About Me',
         ];
 
-        return view('partials.profil', $data);
+        return view('partials.profil', $data); //return view('partials.profil', $data); menampilkan view partials.profil dan mengirimkan data $data ke dalamnya
 
     }
-
 }

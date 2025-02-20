@@ -13,9 +13,12 @@
     <style>
         body {
             /* Styling untuk background halaman */
-            overflow: hidden; /* Mencegah scroll */
-            background: linear-gradient(120deg, #89f7fe, #66a6ff); /* Gradien warna biru */
-            font-family: monospace; /* Font unik */
+            overflow: hidden;
+            /* Mencegah scroll */
+            background: linear-gradient(120deg, #89f7fe, #66a6ff);
+            /* Gradien warna biru */
+            font-family: monospace;
+            /* Font unik */
         }
 
         /* Styling untuk kartu biodata */
@@ -42,8 +45,10 @@
         .profile-img {
             width: 120px;
             height: 120px;
-            border-radius: 50%; /* Membuat gambar bulat */
-            object-fit: cover; /* Menyesuaikan ukuran gambar */
+            border-radius: 50%;
+            /* Membuat gambar bulat */
+            object-fit: cover;
+            /* Menyesuaikan ukuran gambar */
         }
 
         /* Styling untuk ikon media sosial */
@@ -90,7 +95,9 @@
         }
 
         /* Styling untuk teks */
-        h3, h5, p {
+        h3,
+        h5,
+        p {
             color: #ffffff;
         }
 
@@ -119,7 +126,8 @@
 
         /* Animasi ikon panah */
         .back-button:hover i {
-            transform: rotate(-180deg); /* Memutar ikon panah */
+            transform: rotate(-180deg);
+            /* Memutar ikon panah */
         }
 
         /* Styling header kartu */
@@ -138,13 +146,14 @@
         <!-- Kartu utama -->
         <div class="card p-4 text-center bg-dark mt-3">
 
-             <!-- Tombol kembali -->
+            <!-- Tombol kembali -->
             <a href="{{ route('home') }}" class="back-button">
                 <i class="bi bi-arrow-left-circle fs-4"></i> Kembali
             </a>
 
             <!-- Gambar profil -->
             <img src="assets/images/met.png" alt="Foto Profil" class="profile-img mx-auto mb-3">
+            <!-- mx-auto untuk memposisikan elemen ke tengah secara horizontal dengan memberikan margin kiri dan kanan otomatis -->
 
             <!-- Emoji -->
             <h6> 😎 </h6>
@@ -157,10 +166,14 @@
 
             <!-- Bagian Biodata -->
             <h5>Biodata Saya</h5>
+            <!-- list-group-flush digunakan untuk menghapus border dan padding di sekitar list-group-item -->
             <ul class="list-group list-group-flush text-start bg-secondary">
+                <!--Tag <strong> digunakan dalam HTML untuk menandai teks sebagai penting dan membuatnya tebal (bold) secara default.-->
+                <!-- list-group-item untuk membuat daftar list -->
                 <li class="list-group-item"><strong>Nama:</strong> Sugih Aldi Setiawan</li>
                 <li class="list-group-item"><strong>Tempat, Tanggal Lahir:</strong> Subang, 19 April 2007</li>
-                <li class="list-group-item"><strong>Alamat:</strong> Perum Griya Pesona Praja(GPP), RT22 / RW06, Block C11 No.45</li>
+                <li class="list-group-item"><strong>Alamat:</strong> Perum Griya Pesona Praja(GPP), RT22 / RW06, Block
+                    C11 No.45</li>
                 <li class="list-group-item"><strong>Hobi:</strong> Olahraga, Sholat, Menyanyi, Menonton</li>
                 <li class="list-group-item"><strong>Cita-cita:</strong> Ingin Menjadi Bintara Brimob (▀̿Ĺ̯▀̿ ̿) 🔥</li>
             </ul>

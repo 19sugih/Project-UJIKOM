@@ -100,7 +100,7 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama</label>
                         <input type="text" class="form-control" id="name" name="name"
-                            value="{{ $list->name }}" placeholder="Masukkan nama list"> <!-- Pengguna dapat mengedit nama list yang sudah ada --
+                            value="{{ $list->name }}" placeholder="Masukkan nama list"> <!-- Pengguna dapat mengedit nama list yang sudah ada -->
                     </div>
                 </div>
 
